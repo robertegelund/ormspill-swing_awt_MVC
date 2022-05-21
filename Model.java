@@ -24,7 +24,7 @@ public class Model {
     public List<int[]> hentSlange() { return slange; }
     public String hentSlangeRetning() { return slangeRetning; }
     public int hentSlangeLengde() { return slange.size(); }
-    public boolean hentSpillErSlutt() { return spillErSlutt; }
+    public boolean hentErSpillSlutt() { return spillErSlutt; }
     public void endreSpilletErSlutt() { spillErSlutt = true;}
 
     public void flyttSlange(String retning) {
@@ -76,8 +76,12 @@ public class Model {
             }
         }
 
-        if(skatter[rad][kolonne] != null) { leggTilSkatt(); } 
-        else { skatter[rad][kolonne] = "$"; view.tegnSkatt(rad, kolonne); }
+        if(skatter[rad][kolonne] != null) { 
+            leggTilSkatt(); 
+        } else if(skatter[rad][kolonne] == null) { 
+            skatter[rad][kolonne] = "$"; 
+            view.tegnSkatt(rad, kolonne); 
+        }
     }
 
     public void leggTilSlangehode() {

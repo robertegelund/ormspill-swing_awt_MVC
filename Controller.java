@@ -14,8 +14,8 @@ public class Controller {
             @Override
             public void run() {
                 try {
-                    while(!hentSpillErSlutt()) {
-                        Thread.sleep(1000);
+                    while(!hentErSpillSlutt()) {
+                        Thread.sleep(2000);
                         flyttSlange(hentSlangeRetning());
                     }
                     view.gameOver();
@@ -43,8 +43,8 @@ public class Controller {
         return model.hentSlangeRetning();
     }
 
-    public boolean hentSpillErSlutt() {
-        return model.hentSpillErSlutt();
+    public boolean hentErSpillSlutt() {
+        return model.hentErSpillSlutt();
     }
 
     public void endreSpilletErSlutt() {
