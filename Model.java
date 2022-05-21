@@ -27,6 +27,42 @@ public class Model {
     public boolean hentSpillErSlutt() { return spillErSlutt; }
     public void endreSpilletErSlutt() { spillErSlutt = true;}
 
+    public void flyttSlange(String retning) {
+        skjulSlangedeler();
+        
+        int rad = slange.get(slange.size() - 1)[0]; 
+        int kolonne = slange.get(slange.size() - 1)[1];
+        
+        if(retning.equals("NORD")) rad--;
+        else if(retning.equals("SOR")) rad++;
+        else if(retning.equals("VEST")) kolonne--;
+        else if(retning.equals("OST")) kolonne++;
+        
+        if(skatter[rad][kolonne] == null) { 
+            slange.remove(0);
+            slange.add(new int[] {rad, kolonne} );
+        } else if (skatter[rad][kolonne] != null) {
+            fjernSkatt(rad, kolonne);
+            leggTilSlangedel(rad, kolonne);
+            leggTilSkatt();
+        }
+
+        if(!trefferSlangenSegSelv()) { 
+            visSlangedeler();
+            view.visSlangeLengde(slange.size());
+        } else {
+            spillErSlutt = true;
+        }
+    }
+
+    public void endreRetning(String retning) {
+        forrigeRetning = slangeRetning;
+        if(retning.equals("VEST") && !forrigeRetning.equals("OST")) slangeRetning = "VEST";
+        else if(retning.equals("NORD") && !forrigeRetning.equals("SOR")) slangeRetning = "NORD";
+        else if(retning.equals("OST") && !forrigeRetning.equals("VEST")) slangeRetning = "OST";
+        else if(retning.equals("SOR") && !forrigeRetning.equals("NORD")) slangeRetning = "SOR";
+    }
+
     public void leggTilSkatt() {
         int rad = (int)(Math.random() * antRader);
         int kolonne = (int)(Math.random() * antKolonner);
@@ -40,15 +76,8 @@ public class Model {
             }
         }
 
-        if(skatter[rad][kolonne] != null) {
-            leggTilSkatt();
-        } else {
-            skatter[rad][kolonne] = "$"; view.tegnSkatt(rad, kolonne);
-        }
-    }
-
-    public void fjernSkatt(int rad, int kolonne) {
-        skatter[rad][kolonne] = null;
+        if(skatter[rad][kolonne] != null) { leggTilSkatt(); } 
+        else { skatter[rad][kolonne] = "$"; view.tegnSkatt(rad, kolonne); }
     }
 
     public void leggTilSlangehode() {
@@ -60,44 +89,11 @@ public class Model {
         view.visSlangeLengde(hentSlangeLengde());
     }
 
-    public void flyttSlange(String retning) {
-        for(int[] posisjon : slange) {
-            int indeks = slange.indexOf(posisjon);
-            int r = slange.get(indeks)[0];
-            int k = slange.get(indeks)[1];
-            view.fjernSlangedel(r, k);;
-        }
-        
-        int rad = slange.get(slange.size() - 1)[0]; 
-        int kolonne = slange.get(slange.size() - 1)[1];
-        
-        if(skatter[rad][kolonne] == null) { 
-            slange.remove(0);
-            if(retning.equals("NORD")) rad--;
-            else if(retning.equals("SOR")) rad++;
-            else if(retning.equals("VEST")) kolonne--;
-            else if(retning.equals("OST")) kolonne++;
-            slange.add(new int[] {rad, kolonne} );
-        }
+    public void leggTilSlangedel(int rad, int kolonne) {
+        slange.add(new int[] {rad, kolonne});
+    }
 
-        if(skatter[rad][kolonne] != null) {
-            fjernSkatt(rad, kolonne);
-            leggTilSlangedel(retning, rad, kolonne);
-            leggTilSkatt();
-        }
-        
-        for(int[] p1 : slange) {
-            int indeks1 = slange.indexOf(p1);
-            int r1 = slange.get(indeks1)[0]; int k1 = slange.get(indeks1)[1];
-            for(int[] p2 : slange) {
-                int indeks2 = slange.indexOf(p2);
-                int r2 = slange.get(indeks2)[0]; int k2 = slange.get(indeks2)[1];
-                if(indeks1 != indeks2 && r1 == r2 && k1 == k2) {
-                    spillErSlutt = true; return;
-                }
-            }
-        }
-
+    public void visSlangedeler() {
         for(int[] posisjon : slange) {
             int indeks = slange.indexOf(posisjon);
             int r = slange.get(indeks)[0];
@@ -105,23 +101,33 @@ public class Model {
             if(indeks == slange.size() - 1) view.tegnSlangedel("O", r, k);
             else if(indeks != slange.size() - 1) view.tegnSlangedel("+", r, k);
         }
-       
-        view.visSlangeLengde(slange.size());
     }
 
-    public void leggTilSlangedel(String retning, int rad, int kolonne) {
-        if(retning.equals("NORD")) rad--;
-        else if(retning.equals("SOR")) rad++;
-        else if(retning.equals("VEST")) kolonne--;
-        else if(retning.equals("OST")) kolonne++;
-        slange.add(new int[] {rad, kolonne});
+    public void skjulSlangedeler() {
+        for(int[] posisjon : slange) {
+            int indeks = slange.indexOf(posisjon);
+            int r = slange.get(indeks)[0];
+            int k = slange.get(indeks)[1];
+            view.fjernSlangedel(r, k);
+        }
+    } 
+
+    public void fjernSkatt(int rad, int kolonne) {
+        skatter[rad][kolonne] = null;
     }
 
-    public void endreRetning(String retning) {
-        forrigeRetning = slangeRetning;
-        if(retning.equals("VEST") && !forrigeRetning.equals("OST")) slangeRetning = "VEST";
-        else if(retning.equals("NORD") && !forrigeRetning.equals("SOR")) slangeRetning = "NORD";
-        else if(retning.equals("OST") && !forrigeRetning.equals("VEST")) slangeRetning = "OST";
-        else if(retning.equals("SOR") && !forrigeRetning.equals("NORD")) slangeRetning = "SOR";
+    public boolean trefferSlangenSegSelv() {
+        for(int[] p1 : slange) {
+            int indeks1 = slange.indexOf(p1);
+            int r1 = slange.get(indeks1)[0]; int k1 = slange.get(indeks1)[1];
+            for(int[] p2 : slange) {
+                int indeks2 = slange.indexOf(p2);
+                int r2 = slange.get(indeks2)[0]; int k2 = slange.get(indeks2)[1];
+                if(indeks1 != indeks2 && r1 == r2 && k1 == k2) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

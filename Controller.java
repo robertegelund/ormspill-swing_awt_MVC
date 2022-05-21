@@ -14,7 +14,7 @@ public class Controller {
             @Override
             public void run() {
                 try {
-                    while(!model.hentSpillErSlutt()) {
+                    while(!hentSpillErSlutt()) {
                         Thread.sleep(1000);
                         flyttSlange(hentSlangeRetning());
                     }
@@ -22,7 +22,7 @@ public class Controller {
                 } catch (InterruptedException e) {
                     System.out.println("Slangetraaden ble avbrutt.");
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    model.endreSpilletErSlutt();
+                    endreSpilletErSlutt();
                     view.gameOver();
                 }
             }
@@ -35,16 +35,19 @@ public class Controller {
        model.flyttSlange(retning);
     }
 
-    public void leggTilSlangedel(String retning, int rad, int kolonne) {
-        model.leggTilSlangedel(retning, rad, kolonne);
-    } 
-
-
     public void endreRetning(String retning) {
        model.endreRetning(retning);
     }
 
     public String hentSlangeRetning() {
         return model.hentSlangeRetning();
+    }
+
+    public boolean hentSpillErSlutt() {
+        return model.hentSpillErSlutt();
+    }
+
+    public void endreSpilletErSlutt() {
+        model.endreSpilletErSlutt();
     }
 }
