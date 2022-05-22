@@ -2,11 +2,9 @@
 public class Controller {
     private View view;
     private Model model;
-    int antRader, antKolonner;
-    Thread slangeTraad = null;
+    private Thread slangeTraad = null;
 
     Controller(int antRader, int antKolonner, int antSkatter) {
-        this.antRader = antRader; this.antKolonner = antKolonner;
         view = new View(this, antRader, antKolonner);
         model = new Model(view, antRader, antKolonner, antSkatter);
 

@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-    int antRader, antKolonner, antSkatter;
+    private int antRader, antKolonner, antSkatter;
     private String[][] skatter;
     private List<int[]> slange;
-    List<int[]> slangeKopi = null;
     private View view;
-    String forrigeRetning = null;
-    String slangeRetning = "OST";
-    boolean spillErSlutt = false;
+    private String forrigeRetning = null;
+    private String slangeRetning = "OST";
+    private boolean spillErSlutt = false;
 
     Model(View view, int antRader, int antKolonner, int antSkatter) {
         this.view = view;
-        this.antRader = antRader; this.antKolonner = antKolonner;
+        this.antRader = antRader; this.antKolonner = antKolonner; 
+        this.antSkatter = antSkatter;
         skatter = new String[antRader][antKolonner];
         slange = new ArrayList<>();
         
@@ -84,7 +84,7 @@ public class Model {
         }
     }
 
-    public void leggTilSlangehode() {
+    private void leggTilSlangehode() {
         int rad = (antRader / 2) - 1;
         int kolonne = (antKolonner / 2) - 1;
         int[] posisjon = new int[] {rad, kolonne};
@@ -97,7 +97,7 @@ public class Model {
         slange.add(new int[] {rad, kolonne});
     }
 
-    public void visSlangedeler() {
+    private void visSlangedeler() {
         for(int[] posisjon : slange) {
             int indeks = slange.indexOf(posisjon);
             int r = slange.get(indeks)[0];
@@ -107,7 +107,7 @@ public class Model {
         }
     }
 
-    public void skjulSlangedeler() {
+    private void skjulSlangedeler() {
         for(int[] posisjon : slange) {
             int indeks = slange.indexOf(posisjon);
             int r = slange.get(indeks)[0];
@@ -120,7 +120,7 @@ public class Model {
         skatter[rad][kolonne] = null;
     }
 
-    public boolean trefferSlangenSegSelv() {
+    private boolean trefferSlangenSegSelv() {
         for(int[] p1 : slange) {
             int indeks1 = slange.indexOf(p1);
             int r1 = slange.get(indeks1)[0]; int k1 = slange.get(indeks1)[1];

@@ -4,8 +4,8 @@ import javax.swing.*;
 
 public class View {
     private Controller controller;
-    int antRader, antKolonner;
-    JLabel[][] brett;
+    private int antRader, antKolonner;
+    private JLabel[][] brett;
     private JFrame vindu;
     private JPanel hovedpanel, statusPanel, styrePanel, brettPanel;
     private JLabel lengde = new JLabel("", SwingConstants.CENTER);
